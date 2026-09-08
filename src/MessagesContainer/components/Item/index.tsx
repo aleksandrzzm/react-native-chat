@@ -106,8 +106,11 @@ const ItemComponent = <TMessage extends IMessage>(props: ItemProps<TMessage>) =>
     ...rest
   } = props
 
-  // Transform reply props for Message and Bubble
-  const messageProps = useMemo(() => ({
+  // Transform reply props for Message and Bubble.
+  // `rest` is rebuilt by the destructuring above on every render, so memoising on it never hit -
+  // the object was recomputed each time *and* paid for a dependency comparison. The row only
+  // renders when `arePropsEqual` already decided something changed, so there is nothing to cache.
+  const messageProps = {
     ...rest,
     // Swipe to reply for Message component
     swipeToReply: reply?.swipe,
@@ -117,14 +120,21 @@ const ItemComponent = <TMessage extends IMessage>(props: ItemProps<TMessage>) =>
       onPress: reply.onPress,
       ...reply.messageStyle,
     } : undefined,
-  }), [rest, reply])
+  }
+
+  // A day separator belongs only to the first message of its day. Deciding that here, rather than
+  // inside the wrappers, is what keeps `AnimatedDayWrapper` off the other rows: it runs a
+  // useDerivedValue and a useAnimatedStyle, so mounting it around every row put two UI-thread
+  // worklets on each message on screen - roughly six out of seven of them to render null.
+  const isDayBoundary = props.currentMessage?.createdAt != null &&
+    !isSameDay(props.currentMessage, props.previousMessage)
 
   return (
     // do not remove key. it helps to get correct position of the day container
     <View key={props.currentMessage._id.toString()}>
-      {isDayAnimationEnabled
+      {isDayBoundary && (isDayAnimationEnabled
         ? <AnimatedDayWrapper<TMessage> {...props} />
-        : <DayWrapper<TMessage> {...messageProps as MessageProps<TMessage>} />}
+        : <DayWrapper<TMessage> {...messageProps as MessageProps<TMessage>} />)}
       {
         renderMessageProp
           ? renderMessageProp(messageProps as MessageProps<TMessage>)
@@ -147,12 +157,27 @@ function arePropsEqual (prev: ItemProps<IMessage>, next: ItemProps<IMessage>): b
     if (!isEqual(prev[key], next[key]))
       return false
 
-  const keys = new Set<string>([...Object.keys(prev), ...Object.keys(next)])
-  for (const key of keys) {
+  const prevRecord = prev as unknown as Record<string, unknown>
+  const nextRecord = next as unknown as Record<string, unknown>
+  const prevKeys = Object.keys(prev)
+  const nextKeys = Object.keys(next)
+
+  // Walks the same ground as the union of both key sets, without building it: equal counts plus
+  // every prev key present on next means the sets are identical, so comparing prev's keys covers
+  // next's too. This runs once per mounted row per commit over ~60 props, and the Set it used to
+  // allocate for that (plus the two spreads feeding it) was pure garbage on the scroll path.
+  if (prevKeys.length !== nextKeys.length)
+    return false
+
+  for (const key of nextKeys)
+    if (!Object.prototype.hasOwnProperty.call(prev, key))
+      return false
+
+  for (const key of prevKeys) {
     if ((MESSAGE_KEYS as string[]).includes(key))
       continue
 
-    if (!Object.is((prev as unknown as Record<string, unknown>)[key], (next as unknown as Record<string, unknown>)[key]))
+    if (!Object.is(prevRecord[key], nextRecord[key]))
       return false
   }
 
