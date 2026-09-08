@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { StyleSheet } from 'react-native'
 import { BaseButton } from 'react-native-gesture-handler'
 import Animated, {
@@ -59,6 +59,11 @@ export const TouchableOpacity: React.FC<TouchableOpacityProps> = ({
     onPress?.()
   }, [onPress])
 
+  // Every tappable in the library goes through this component - each message bubble, avatar,
+  // action and attachment - so composing the style list inline handed Animated.View a fresh array
+  // on each of those renders.
+  const composedStyle = useMemo(() => [style, animatedStyle, styles.content], [style, animatedStyle])
+
   return (
     <BaseButton
       {...rest}
@@ -69,7 +74,7 @@ export const TouchableOpacity: React.FC<TouchableOpacityProps> = ({
         // The content view must not capture touches, otherwise it swallows the
         // BaseButton's press on Android (see #2714). pointerEvents in style is
         // the non-deprecated form on RN's New Architecture.
-        style={[style, animatedStyle, styles.content]}
+        style={composedStyle}
       >
         {children}
       </Animated.View>

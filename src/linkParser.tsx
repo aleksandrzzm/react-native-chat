@@ -222,7 +222,7 @@ function removeOverlaps(links: ParsedLink[]): ParsedLink[] {
   return filtered
 }
 
-export function LinkParser({
+function LinkParserComponent({
   text,
   matchers: customMatchers,
   email = true,
@@ -350,3 +350,9 @@ export function LinkParser({
 
   return <TextComponent style={textStyle}>{elements}</TextComponent>
 }
+
+// Rendered once per message body, and rebuilding its element list is the second most expensive
+// thing a message row does after the row itself. The parse is already memoised, but the component
+// still re-ran whenever its parent did - which, in a list, is on every commit that touches the
+// row. Memoising the component lets an unchanged body skip the work entirely.
+export const LinkParser = React.memo(LinkParserComponent)
