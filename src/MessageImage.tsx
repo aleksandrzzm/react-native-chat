@@ -187,7 +187,7 @@ export function MessageImage<TMessage extends IMessage = IMessage> ({
 
   return (
     <View style={containerStyle}>
-      <TouchableOpacity onPress={handleImagePress}>
+      <TouchableOpacity onPress={handleImagePress} testID='message-image-touchable'>
         <Image
           {...imageProps}
           style={computedImageStyle}
@@ -197,17 +197,24 @@ export function MessageImage<TMessage extends IMessage = IMessage> ({
         />
       </TouchableOpacity>
 
-      <OverKeyboardView visible={isModalVisible}>
-        <SafeAreaProvider>
-          <ModalContent
-            isVisible={isModalVisible}
-            imageSource={imageSource}
-            modalImageDimensions={modalImageDimensions}
-            imageProps={imageProps}
-            onClose={handleModalClose}
-          />
-        </SafeAreaProvider>
-      </OverKeyboardView>
+      {/* Mounted only once opened. `ModalContent` holds three shared values and the animated
+          styles over them, and `SafeAreaProvider` is a context provider of its own, so leaving
+          this in the tree put all of it on every image message in the conversation for a viewer
+          almost none of them will ever show. It mounts already-visible, and its open animation
+          runs from the same effect that used to react to `isVisible` flipping. */}
+      {isModalVisible && (
+        <OverKeyboardView visible>
+          <SafeAreaProvider>
+            <ModalContent
+              isVisible
+              imageSource={imageSource}
+              modalImageDimensions={modalImageDimensions}
+              imageProps={imageProps}
+              onClose={handleModalClose}
+            />
+          </SafeAreaProvider>
+        </OverKeyboardView>
+      )}
     </View>
   )
 }
