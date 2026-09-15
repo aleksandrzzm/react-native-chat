@@ -32,6 +32,10 @@
   <a href="docs/MIGRATION.md">Migrate in one command with the codemod →</a>
 </p>
 
+<p align="center">
+  <sub>Maintained by <a href="https://github.com/kesha-antonov">Kesha Antonov</a>, who also builds <a href="https://cryptoc-app.web.app/"><strong>cryptoc</strong></a> - a crypto portfolio app with home screen and Watch widgets.</sub>
+</p>
+
 ---
 
 ## Quick start
@@ -1423,6 +1427,8 @@ Before opening a PR, please make sure `yarn test`, `yarn lint` and `yarn build` 
 Based on [FaridSafi/react-native-gifted-chat](https://github.com/FaridSafi/react-native-gifted-chat), which is no longer actively maintained.
 
 **Maintainer:** [Kesha Antonov](https://github.com/kesha-antonov)
+
+I also build **[cryptoc](https://cryptoc-app.web.app/)** - a crypto portfolio app with home screen, lock screen and Watch widgets, no account and no exchange API keys.
 
 > I maintained the original project solo for 2 years before deciding to continue development in this repository. If you find this library useful, please consider [becoming a sponsor](https://github.com/sponsors/kesha-antonov) to support continued development. 💖
 
