@@ -33,6 +33,14 @@
 </p>
 
 <p align="center">
+  <strong><a href="https://kesha-antonov.github.io/react-native-chat/">📖 Documentation</a></strong> &nbsp;·&nbsp;
+  <a href="https://kesha-antonov.github.io/react-native-chat/installation">Installation</a> &nbsp;·&nbsp;
+  <a href="https://kesha-antonov.github.io/react-native-chat/usage">Usage</a> &nbsp;·&nbsp;
+  <a href="https://kesha-antonov.github.io/react-native-chat/props">Props</a> &nbsp;·&nbsp;
+  <a href="https://kesha-antonov.github.io/react-native-chat/guides">Guides</a>
+</p>
+
+<p align="center">
   <sub>Using it in production? A ⭐ helps other developers find the library.</sub>
 </p>
 
