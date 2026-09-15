@@ -11,6 +11,8 @@ export default [
   {
     ignores: [
       '**/node_modules/**',
+      // The docs site is its own ESM project with its own toolchain.
+      'website/**',
       '**/lib/**',
       '**/build/**',
       '**/.expo/**',
