@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.0.1] - 2026-09-15
+
+### ⚡ Performance
+- Message rows no longer allocate a day wrapper or per-commit objects on every render
+- The full-screen image viewer mounts only once it is opened, instead of with every message that carries an image
+- The link parser and the touchable's style list are memoised
+- Bubble press-scale and gestures moved onto the overlay path only, so they are not rebuilt for bubbles that never use them
+
+### 📦 Other
+- **Documentation site:** [kesha-antonov.github.io/react-native-chat](https://kesha-antonov.github.io/react-native-chat/), generated from this README so the two cannot drift apart
+- **Releases publish from CI through npm trusted publishing.** The tarball now carries provenance - a signed, verifiable link back to the workflow run that built it - and there is no npm token stored in the repository to leak or rotate
+
 ## [5.0.0] - 2026-09-03
 
 ### 💥 Breaking
