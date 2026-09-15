@@ -65,6 +65,8 @@
 </tr>
 </table>
 
+<hr />
+
 ## Quick start
 
 ```bash
