@@ -104,6 +104,7 @@ export const MessagesContainer = <TMessage extends IMessage>(props: MessagesCont
   }, [isAlignedTop, isFlashList, isTopAligned, isInverted])
 
   const listPropsOnScrollProp = listProps?.onScroll
+  const onScrollUI = props.onScrollUI
 
   const scrollToBottomOpacity = useSharedValue(0)
   const isScrollingDown = useSharedValue(false)
@@ -492,6 +493,7 @@ export const MessagesContainer = <TMessage extends IMessage>(props: MessagesCont
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
+      onScrollUI?.(event);
       const y = event.contentOffset.y
       const contentSizeHeight = event.contentSize.height
       const layoutHeight = event.layoutMeasurement.height

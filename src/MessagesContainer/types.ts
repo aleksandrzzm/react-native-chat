@@ -50,6 +50,8 @@ export interface MessagesContainerProps<TMessage extends IMessage = IMessage>
   user?: User
   /** Additional props for FlatList */
   listProps?: AnimatedListProps<TMessage>
+  /** Scroll event in UI Thread */
+  onScrollUI?: (event: any) => void
   /**
    * Render messages with `@shopify/flash-list` (v2) instead of `FlatList`.
    * Requires the optional `@shopify/flash-list` peer dependency and the New
